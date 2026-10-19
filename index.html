@@ -77,6 +77,7 @@
     .badge-buff { background: #1565c0; }
     .badge-mat { background: #d84315; }
     .badge-soup { background: #00838f; }
+    .badge-combat { background: #c62828; }
     @media (max-width: 600px) {
       th, td { padding: 8px 6px; font-size: 12px; }
     }
@@ -85,10 +86,10 @@
 <body>
 
   <h1>SULFUR 料理・クラフト完全データベース</h1>
-  <p class="subtitle">料理名、素材名、効果、分類からリアルタイムで一発検索できます</p>
+  <p class="subtitle">謎の肉、臓器、キノコ、グレネード等、全アイテム・レシピを網羅</p>
 
   <div class="search-container">
-    <input type="text" id="searchInput" onkeyup="searchRecipe()" placeholder="例：パン、チーズ、ピザ、回復、スープ などで検索...">
+    <input type="text" id="searchInput" onkeyup="searchRecipe()" placeholder="例：謎の肉、肺、ピザ、チーズ、スープ、グレネード などで検索...">
   </div>
 
   <table id="recipeTable">
@@ -103,43 +104,42 @@
       </tr>
     </thead>
     <tbody>
-      <!-- メイン・高回復料理 -->
-      <tr><td><span class="badge badge-heal">回復</span></td><td>ピザ (Pizza)</td><td>スパイシーソーセージ</td><td>チーズ</td><td>ハーブ</td><td>HP大幅回復（6分割して持ち運び可能）</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>チーズサンド</td><td>パン</td><td>チーズ</td><td>-</td><td>HP回復 / 序盤の定番非常食</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>ダブルチーズバーガー</td><td>パン</td><td>チーズ</td><td>肉</td><td>HP高回復・高効率</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>フレンチホットドッグ</td><td>パン</td><td>肉</td><td>-</td><td>手軽に作れるHP回復食</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>ラーメン</td><td>スパゲッティ</td><td>ブロス</td><td>卵 (任意)</td><td>HP中回復 / 凍結耐性付与</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>スパゲッティ・ボロネーゼ</td><td>スパゲッティ</td><td>肉</td><td>トマトソース</td><td>HP高回復</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>フォンデュ</td><td>チーズ</td><td>チーズ</td><td>ブロス</td><td>HP回復 / 高値で売却可能（金策）</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>エスカルゴ</td><td>カタツムリ</td><td>ブロス</td><td>ハーブ</td><td>HP高回復 / 高額換金アイテム</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>プーティン</td><td>フライドポテト</td><td>グレービーソース</td><td>チーズ</td><td>HP高回復・高単価</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>焼き魚</td><td>魚 (生)</td><td>塩</td><td>-</td><td>手軽なHP回復アイテム</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>ステーキ</td><td>肉 (上質)</td><td>塩</td><td>黒胡椒</td><td>HP特大回復 / スタミナ回復</td></tr>
+      <!-- 肉・臓器・ハンバーガー系 -->
+      <tr><td><span class="badge badge-heal">回復</span></td><td>チーズバーガー</td><td>パン</td><td>チーズ</td><td>各種肉（謎の肉・ゴブリン等）</td><td>HP中回復・定番の肉料理</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>ダブルチーズバーガー</td><td>パン (x2)</td><td>チーズ (x2)</td><td>各種肉 (x2)</td><td>HP高回復・高効率</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>フレンチホットドッグ</td><td>パン</td><td>臓器（肺・脳・腸・脾臓など）</td><td>-</td><td>臓器を美味しく活用できる回復食</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>スパゲッティ・ボロネーゼ</td><td>スパゲッティ</td><td>謎の肉（または人肉等）</td><td>-</td><td>HP高回復</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>ナッシュビル・ホット・チキン</td><td>鶏もも肉 (x2)</td><td>スパイス・ミックス (x2)</td><td>-</td><td>高値で売却可能・高回復</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>肉串 (Meat Skewer)</td><td>謎の肉</td><td>スティック</td><td>-</td><td>手軽な串焼き回復</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>ビーフジャーキー</td><td>皮膚 (Skin)</td><td>塩 / 黒胡椒</td><td>-</td><td>保存食・小回復</td></tr>
 
-      <!-- スープ類 -->
-      <tr><td><span class="badge badge-soup">スープ</span></td><td>マッシュルームスープ</td><td>ボトル入り水</td><td>ベルベットベル (x3)</td><td>-</td><td>序盤で作れる基礎回復スープ</td></tr>
-      <tr><td><span class="badge badge-soup">スープ</span></td><td>オニオンスープ</td><td>ボトル入り水</td><td>タマネギ</td><td>ハーブ</td><td>HP継続回復効果</td></tr>
-      <tr><td><span class="badge badge-soup">スープ</span></td><td>ポテトスープ</td><td>ボトル入り水</td><td>じゃがいも</td><td>バター</td><td>HP中回復</td></tr>
-      <tr><td><span class="badge badge-soup">スープ</span></td><td>トマトスープ</td><td>ボトル入り水</td><td>トマト</td><td>ハーブ</td><td>体温維持・HP回復</td></tr>
-      <tr><td><span class="badge badge-soup">スープ</span></td><td>肉のスープ (ブロス煮込み)</td><td>ボトル入り水</td><td>ブロス</td><td>肉</td><td>高い回復力のスープ</td></tr>
+      <!-- ピザ・定番料理・スープ -->
+      <tr><td><span class="badge badge-heal">回復</span></td><td>ピザ (Pizza)</td><td>スパイシーソーセージ</td><td>チーズ</td><td>ハーブ</td><td>HP大幅回復。オーブンで6個のピザスライスに分割可能</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>ラーメン</td><td>スパゲッティ</td><td>ブロス (出汁)</td><td>卵 / スパイス等</td><td>HP中回復 / 凍結耐性付与</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>ラクレット</td><td>じゃがいも (x2)</td><td>チーズ</td><td>-</td><td>HPの半分ほどを回復できる優れもの</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>シュールストレミング</td><td>グリーン・グローブ</td><td>魚 (生 / サンマ塩漬け等)</td><td>-</td><td>高い回復力（一部デバフ注意）</td></tr>
+      <tr><td><span class="badge badge-soup">スープ</span></td><td>マッシュルームスープ</td><td>ボトル入り水</td><td>ベルベットベル (x3) または ロイクソップ</td><td>-</td><td>キノコから作る序盤の基礎スープ</td></tr>
+      <tr><td><span class="badge badge-soup">スープ</span></td><td>ソーセージスープ</td><td>スパイシーソーセージ</td><td>ブロス</td><td>-</td><td>凍結耐性つきスープ</td></tr>
 
-      <!-- スイーツ・バフ系 -->
-      <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>チョコレート・マッドケーキ</td><td>チョコシロップ</td><td>卵</td><td>バター</td><td>スタミナ回復・移動速度UP・高金策</td></tr>
-      <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>アップルパイ</td><td>リンゴ</td><td>小麦粉</td><td>バター</td><td>HP回復 / 移動速度わずかにUP</td></tr>
-      <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>パンケーキ</td><td>小麦粉</td><td>卵</td><td>ミルク</td><td>HP回復 / スタミナ上限UP</td></tr>
-      <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>ドーナツ</td><td>小麦粉</td><td>砂糖</td><td>油</td><td>手軽なスタミナ回復</td></tr>
-      <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>フルーツポンチ</td><td>各種フルーツ (x3)</td><td>ボトル入り水</td><td>砂糖</td><td>水分補給・スタミナ回復</td></tr>
+      <!-- キノコ・ポーション・薬草系 -->
+      <tr><td><span class="badge badge-heal">ポーション</span></td><td>HP回復ポーション</td><td>ロイクソップ（赤キノコ）(x3)</td><td>ハーブ / 血</td><td>-</td><td>一気にHPを100回復する強力な薬</td></tr>
+      <tr><td><span class="badge badge-heal">ポーション</span></td><td>ロイクソップ・ペースト</td><td>ロイクソップ (x3)</td><td>岩 (Rock)</td><td>-</td><td>敵の動きをスローにするペースト</td></tr>
+      <tr><td><span class="badge badge-buff">バフ</span></td><td>ホットソース</td><td>溶液 (Solution)</td><td>スパイス・ミックス</td><td>-</td><td>寒さ・凍結耐性（240秒）</td></tr>
+      <tr><td><span class="badge badge-buff">バフ</span></td><td>ソーダ</td><td>水 / 溶液</td><td>砂糖</td><td>-</td><td>移動中の命中率UP / 炎上・毒解除</td></tr>
 
-      <!-- 中間素材・クラフト用 -->
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>スパイス・ミックス</td><td>塩</td><td>黒胡椒</td><td>-</td><td>料理クラフトの万能隠し味・タコス等に使用</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>パン (Bread)</td><td>小麦粉</td><td>ボトル入り水</td><td>イースト</td><td>各種サンドイッチ・ピザのベース素材</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>グレービーソース</td><td>ブロス</td><td>小麦粉</td><td>バター</td><td>スープ・プーティン系の合成素材</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>トマトソース</td><td>トマト</td><td>ハーブ</td><td>塩</td><td>パスタ・ピザ系に使用</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>フライドポテト</td><td>じゃがいも</td><td>油</td><td>塩</td><td>そのまま食べるかプーティン素材に</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>バター</td><td>ミルク</td><td>塩</td><td>-</td><td>お菓子・スープ・ソース系の合成素材</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>小麦粉</td><td>小麦</td><td>(粉砕機等)</td><td>-</td><td>パンやスイーツの必須ベース素材</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>チーズ</td><td>ミルク</td><td>発酵剤 (塩等)</td><td>-</td><td>ピザやバーガー、フォンデュの必須素材</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>ブロス (スープ出汁)</td><td>骨・肉片</td><td>ボトル入り水</td><td>塩</td><td>ラーメンやスープ、ソースのベース</td></tr>
+      <!-- 戦闘・グレネード系クラフト -->
+      <tr><td><span class="badge badge-combat">戦闘・爆弾</span></td><td>サルファーグレネード</td><td>謎の肉</td><td>偽のサルファキャップ (キノコ)</td><td>-</td><td>敵を攻撃する特殊グレネード</td></tr>
+      <tr><td><span class="badge badge-combat">戦闘・爆弾</span></td><td>ダイナマイト</td><td>金属スクラップ</td><td>岩 / 偽のサルファキャップ / 心臓</td><td>-</td><td>爆破用ダイナマイト</td></tr>
+      <tr><td><span class="badge badge-combat">戦闘・爆弾</span></td><td>パイナップルグレネード</td><td>謎の肉 (x2)</td><td>金属スクラップ (x2)</td><td>溶液等</td><td>強力な投擲爆弾</td></tr>
+
+      <!-- 中間素材・増殖・便利レシピ -->
+      <tr><td><span class="badge badge-mat">素材/増殖</span></td><td>スパイス・ミックス (x3作製)</td><td>ホットスナック（皮+スパイス）</td><td>岩 (Rock)</td><td>-</td><td>岩で砕くことでスパイスを大量増殖できる重要テクニック</td></tr>
+      <tr><td><span class="badge badge-mat">中間素材</span></td><td>スパイス・ミックス</td><td>黒胡椒 (x2)</td><td>-</td><td>-</td><td>料理のベースとなる香辛料</td></tr>
+      <tr><td><span class="badge badge-mat">中間素材</span></td><td>グリーン・グローブ</td><td>カタツムリ (Snail)</td><td>岩 (Rock)</td><td>-</td><td>シュールストレミング等の素材に変化</td></tr>
+      <tr><td><span class="badge badge-mat">中間素材</span></td><td>パン (Bread)</td><td>小麦粉</td><td>ボトル入り水 / 牛乳</td><td>-</td><td>サンドイッチやピザの土台</td></tr>
+      <tr><td><span class="badge badge-mat">中間素材</span></td><td>ブロス (出汁)</td><td>ボトル入り水</td><td>骨 / 塩 / 腎臓石</td><td>-</td><td>スープやラーメンのベース</td></tr>
+      <tr><td><span class="badge badge-mat">中間素材</span></td><td>バター</td><td>全乳 (Whole Milk) (x2) またはファットバーグ</td><td>-</td><td>-</td><td>お菓子やソースの材料</td></tr>
+      <tr><td><span class="badge badge-mat">中間素材</span></td><td>グレービーソース</td><td>バター</td><td>ブロス</td><td>-</td><td>プーティンなどのソース</td></tr>
     </tbody>
   </table>
 
