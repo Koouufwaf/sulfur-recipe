@@ -5,49 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SULFUR 料理・クラフト完全データベース</title>
   <style>
+    :root {
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --accent-color: #ff9800;
+      --border-color: #333;
+      --text-color: #e0e0e0;
+    }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: #121212;
-      color: #e0e0e0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       max-width: 1000px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 15px;
     }
     h1 {
-      color: #ff9800;
+      color: var(--accent-color);
       text-align: center;
       font-size: 24px;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
     p.subtitle {
       text-align: center;
       color: #888;
-      font-size: 14px;
-      margin-bottom: 20px;
+      font-size: 13px;
+      margin-bottom: 15px;
     }
-    .search-container {
+    
+    /* 検索 & フィルターエリア */
+    .control-panel {
       position: sticky;
-      top: 10px;
+      top: 0;
       z-index: 100;
-      background: #121212;
-      padding-bottom: 10px;
+      background: var(--bg-color);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
     }
-    input {
+    input[type="text"] {
       width: 100%;
-      padding: 14px;
+      padding: 12px;
       font-size: 16px;
       box-sizing: border-box;
-      background: #1e1e1e;
-      border: 2px solid #ff9800;
+      background: var(--card-bg);
+      border: 2px solid var(--accent-color);
       color: #fff;
       border-radius: 8px;
       outline: none;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      margin-bottom: 10px;
     }
+    
+    /* チェックボックスエリア */
+    .checkbox-group {
+      background: var(--card-bg);
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    .checkbox-title {
+      font-weight: bold;
+      color: var(--accent-color);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .checkbox-item {
+      background: #2a2a2a;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .checkbox-item input { margin-right: 4px; }
+    
+    /* テーブル表示 (PC用) */
     table {
       width: 100%;
       border-collapse: collapse;
-      background: #1e1e1e;
+      background: var(--card-bg);
       border-radius: 8px;
       overflow: hidden;
       margin-top: 10px;
@@ -55,22 +97,25 @@
     th, td {
       padding: 12px;
       text-align: left;
-      border-bottom: 1px solid #2c2c2c;
+      border-bottom: 1px solid var(--border-color);
       font-size: 14px;
     }
     th {
       background-color: #2c2c2c;
-      color: #ff9800;
+      color: var(--accent-color);
+      cursor: pointer;
       white-space: nowrap;
     }
+    th:hover { background-color: #3a3a3a; }
     tr:hover { background-color: #2a2a2a; }
+    
+    /* バッジ */
     .badge {
       display: inline-block;
       padding: 2px 6px;
       border-radius: 4px;
       font-size: 11px;
       font-weight: bold;
-      background: #333;
       color: #fff;
     }
     .badge-heal { background: #2e7d32; }
@@ -78,101 +123,195 @@
     .badge-mat { background: #d84315; }
     .badge-soup { background: #00838f; }
     .badge-combat { background: #c62828; }
-    @media (max-width: 600px) {
-      th, td { padding: 8px 6px; font-size: 12px; }
+
+    /* スマホ用カード表示 (画面幅700px以下) */
+    @media (max-width: 700px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead { display: none; } /* ヘッダー非表示 */
+      tr {
+        margin-bottom: 12px;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px;
+      }
+      td {
+        border: none;
+        padding: 4px 0;
+        font-size: 14px;
+      }
+      td:nth-child(1) { font-weight: bold; }
+      td:nth-child(2) { font-size: 16px; font-weight: bold; color: var(--accent-color); }
+      td:before {
+        content: attr(data-label) ": ";
+        font-weight: bold;
+        color: #aaa;
+      }
+      td:nth-child(1):before, td:nth-child(2):before { content: ""; }
     }
   </style>
 </head>
 <body>
 
-  <h1>SULFUR 料理・クラフト完全データベース</h1>
-  <p class="subtitle">全料理・数値つき回復量・謎の肉・臓器・ポーション・爆弾まで完全網羅</p>
+  <h1>SULFUR 料理・クラフトデータベース</h1>
+  <p class="subtitle">逆引き検索・ソート・スマホ最適化対応完全版</p>
 
-  <div class="search-container">
-    <input type="text" id="searchInput" onkeyup="searchRecipe()" placeholder="料理名、素材（パン、謎の肉、チーズ等）、効果数値で検索...">
+  <div class="control-panel">
+    <input type="text" id="searchInput" onkeyup="filterRecipes()" placeholder="🔍 料理名・素材・効果で検索...">
+    
+    <div class="checkbox-group">
+      <div class="checkbox-title">
+        <span>📦 手持ちの素材から逆引き</span>
+        <button onclick="clearCheckboxes()" style="background:#444; color:#fff; border:none; border-radius:4px; padding:2px 6px; font-size:11px; cursor:pointer;">クリア</button>
+      </div>
+      <div class="checkboxes" id="materialCheckboxes">
+        <!-- 主要素材チェックボックス -->
+        <label class="checkbox-item"><input type="checkbox" value="パン" onchange="filterRecipes()">🍞 パン</label>
+        <label class="checkbox-item"><input type="checkbox" value="チーズ" onchange="filterRecipes()">🧀 チーズ</label>
+        <label class="checkbox-item"><input type="checkbox" value="肉" onchange="filterRecipes()">🥩 肉</label>
+        <label class="checkbox-item"><input type="checkbox" value="謎の肉" onchange="filterRecipes()">🍖 謎の肉</label>
+        <label class="checkbox-item"><input type="checkbox" value="ブロス" onchange="filterRecipes()">🍲 ブロス</label>
+        <label class="checkbox-item"><input type="checkbox" value="スパゲッティ" onchange="filterRecipes()">🍝 スパゲッティ</label>
+        <label class="checkbox-item"><input type="checkbox" value="ハーブ" onchange="filterRecipes()">🌿 ハーブ</label>
+        <label class="checkbox-item"><input type="checkbox" value="じゃがいも" onchange="filterRecipes()">🥔 じゃがいも</label>
+        <label class="checkbox-item"><input type="checkbox" value="卵" onchange="filterRecipes()">🥚 卵</label>
+        <label class="checkbox-item"><input type="checkbox" value="バター" onchange="filterRecipes()">🧈 バター</label>
+        <label class="checkbox-item"><input type="checkbox" value="ロイクソップ" onchange="filterRecipes()">🍄 ロイクソップ</label>
+        <label class="checkbox-item"><input type="checkbox" value="塩" onchange="filterRecipes()">🧂 塩</label>
+      </div>
+    </div>
   </div>
 
   <table id="recipeTable">
     <thead>
       <tr>
-        <th>分類</th>
-        <th>料理名 / 完成品</th>
+        <th onclick="sortTable(0)">分類 ↕</th>
+        <th onclick="sortTable(1)">料理名 ↕</th>
         <th>素材 1</th>
         <th>素材 2</th>
         <th>素材 3</th>
-        <th>効果・回復量数値・備考</th>
+        <th onclick="sortTable(5, true)">効果・回復量 ↕</th>
       </tr>
     </thead>
     <tbody>
       <!-- 回復系・肉料理 -->
-      <tr><td><span class="badge badge-heal">回復</span></td><td>ピザ (Pizza)</td><td>スパイシーソーセージ</td><td>チーズ</td><td>ハーブ</td><td><strong>HP 120 回復</strong>（オーブンで6分割時: 1切あたり HP 20 回復）</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>ステーキ</td><td>肉 (上質)</td><td>塩</td><td>黒胡椒</td><td><strong>HP 100 回復</strong> / スタミナ全回復</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>ダブルチーズバーガー</td><td>パン (x2)</td><td>チーズ (x2)</td><td>各種肉 (x2)</td><td><strong>HP 90 回復</strong>（高効率）</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>シュールストレミング</td><td>グリーン・グローブ</td><td>魚 (生 / サンマ塩漬け等)</td><td>-</td><td><strong>HP 80 回復</strong>（一部デバフ注意）</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>ナッシュビル・ホット・チキン</td><td>鶏もも肉 (x2)</td><td>スパイス・ミックス (x2)</td><td>-</td><td><strong>HP 75 回復</strong> / 高値売却 (金策)</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>エスカルゴ</td><td>カタツムリ</td><td>ブロス</td><td>ハーブ</td><td><strong>HP 70 回復</strong> / 高値換金アイテム</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>ラクレット</td><td>じゃがいも (x2)</td><td>チーズ</td><td>-</td><td><strong>HP 65 回復</strong></td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>スパゲッティ・ボロネーゼ</td><td>スパゲッティ</td><td>謎の肉 / トマトソース</td><td>-</td><td><strong>HP 60 回復</strong></td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>プーティン</td><td>フライドポテト</td><td>グレービーソース</td><td>チーズ</td><td><strong>HP 60 回復</strong> / 高単価</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>フォンデュ</td><td>チーズ</td><td>チーズ</td><td>ブロス</td><td><strong>HP 55 回復</strong> / 高値で売却可能（金策）</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>チーズバーガー</td><td>パン</td><td>チーズ</td><td>各種肉（謎の肉・ゴブリン等）</td><td><strong>HP 50 回復</strong></td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>ラーメン</td><td>スパゲッティ</td><td>ブロス (出汁)</td><td>卵 / スパイス等</td><td><strong>HP 45 回復</strong> / 凍結耐性付与 (60秒)</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>フレンチホットドッグ</td><td>パン</td><td>肉 または 臓器（肺・脳・腸・脾臓など）</td><td>-</td><td><strong>HP 40 回復</strong>（臓器等を有効活用）</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>チーズサンド</td><td>パン</td><td>チーズ</td><td>-</td><td><strong>HP 30 回復</strong> / 序盤の定番非常食</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>焼き魚</td><td>魚 (生)</td><td>塩</td><td>-</td><td><strong>HP 25 回復</strong></td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>肉串 (Meat Skewer)</td><td>謎の肉</td><td>スティック</td><td>-</td><td><strong>HP 20 回復</strong></td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>ビーフジャーキー</td><td>皮膚 (Skin)</td><td>塩 / 黒胡椒</td><td>-</td><td><strong>HP 15 回復</strong>（保存食）</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🍕 ピザ (Pizza)</td><td>スパイシーソーセージ</td><td>チーズ</td><td>ハーブ</td><td data-label="効果・回復量"><strong>HP 120 回復</strong>（6分割時: 1切HP20）</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🥩 ステーキ</td><td>肉 (上質)</td><td>塩</td><td>黒胡椒</td><td data-label="効果・回復量"><strong>HP 100 回復</strong> / スタミナ全回復</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🍔 ダブルチーズバーガー</td><td>パン (x2)</td><td>チーズ (x2)</td><td>各種肉 (x2)</td><td data-label="効果・回復量"><strong>HP 90 回復</strong>（高効率）</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🐟 シュールストレミング</td><td>グリーン・グローブ</td><td>魚 (生)</td><td>-</td><td data-label="効果・回復量"><strong>HP 80 回復</strong>（デバフ注意）</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🍗 ナッシュビル・チキン</td><td>鶏もも肉 (x2)</td><td>スパイス・ミックス (x2)</td><td>-</td><td data-label="効果・回復量"><strong>HP 75 回復</strong> / 高値売却 (金策)</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🐌 エスカルゴ</td><td>カタツムリ</td><td>ブロス</td><td>ハーブ</td><td data-label="効果・回復量"><strong>HP 70 回復</strong> / 高額換金</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🥔 ラクレット</td><td>じゃがいも (x2)</td><td>チーズ</td><td>-</td><td data-label="効果・回復量"><strong>HP 65 回復</strong></td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🍝 スパゲッティ・ボロネーゼ</td><td>スパゲッティ</td><td>謎の肉 / トマトソース</td><td>-</td><td data-label="効果・回復量"><strong>HP 60 回復</strong></td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🍟 プーティン</td><td>フライドポテト</td><td>グレービーソース</td><td>チーズ</td><td data-label="効果・回復量"><strong>HP 60 回復</strong> / 高単価</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🫕 フォンデュ</td><td>チーズ</td><td>チーズ</td><td>ブロス</td><td data-label="効果・回復量"><strong>HP 55 回復</strong> / 高値売却</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🍔 チーズバーガー</td><td>パン</td><td>チーズ</td><td>各種肉 (謎の肉等)</td><td data-label="効果・回復量"><strong>HP 50 回復</strong></td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🍜 ラーメン</td><td>スパゲッティ</td><td>ブロス</td><td>卵 / スパイス等</td><td data-label="効果・回復量"><strong>HP 45 回復</strong> / 凍結耐性(60秒)</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🌭 フレンチホットドッグ</td><td>パン</td><td>肉 または 臓器(肺・脳等)</td><td>-</td><td data-label="効果・回復量"><strong>HP 40 回復</strong></td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🥪 チーズサンド</td><td>パン</td><td>チーズ</td><td>-</td><td data-label="効果・回復量"><strong>HP 30 回復</strong> / 序盤非常食</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🐟 焼き魚</td><td>魚 (生)</td><td>塩</td><td>-</td><td data-label="効果・回復量"><strong>HP 25 回復</strong></td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🍢 肉串 (Meat Skewer)</td><td>謎の肉</td><td>スティック</td><td>-</td><td data-label="効果・回復量"><strong>HP 20 回復</strong></td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🥓 ビーフジャーキー</td><td>皮膚 (Skin)</td><td>塩 / 黒胡椒</td><td>-</td><td data-label="効果・回復量"><strong>HP 15 回復</strong></td></tr>
 
       <!-- スープ類 -->
-      <tr><td><span class="badge badge-soup">スープ</span></td><td>肉のスープ (ブロス煮込み)</td><td>ボトル入り水</td><td>ブロス</td><td>肉</td><td><strong>HP 50 回復</strong></td></tr>
-      <tr><td><span class="badge badge-soup">スープ</span></td><td>ソーセージスープ</td><td>スパイシーソーセージ</td><td>ブロス</td><td>-</td><td><strong>HP 40 回復</strong> / 凍結耐性</td></tr>
-      <tr><td><span class="badge badge-soup">スープ</span></td><td>ポテトスープ</td><td>ボトル入り水</td><td>じゃがいも</td><td>バター</td><td><strong>HP 35 回復</strong></td></tr>
-      <tr><td><span class="badge badge-soup">スープ</span></td><td>オニオンスープ</td><td>ボトル入り水</td><td>タマネギ</td><td>ハーブ</td><td><strong>HP 30 回復</strong>（毎秒+2ずつの継続回復）</td></tr>
-      <tr><td><span class="badge badge-soup">スープ</span></td><td>トマトスープ</td><td>ボトル入り水</td><td>トマト</td><td>ハーブ</td><td><strong>HP 30 回復</strong> / 体温維持</td></tr>
-      <tr><td><span class="badge badge-soup">スープ</span></td><td>マッシュルームスープ</td><td>ボトル入り水</td><td>ベルベットベル (x3) または ロイクソップ</td><td>-</td><td><strong>HP 25 回復</strong></td></tr>
+      <tr><td><span class="badge badge-soup">スープ</span></td><td>🍲 肉のスープ</td><td>ボトル入り水</td><td>ブロス</td><td>肉</td><td data-label="効果・回復量"><strong>HP 50 回復</strong></td></tr>
+      <tr><td><span class="badge badge-soup">スープ</span></td><td>🍲 ソーセージスープ</td><td>スパイシーソーセージ</td><td>ブロス</td><td>-</td><td data-label="効果・回復量"><strong>HP 40 回復</strong> / 凍結耐性</td></tr>
+      <tr><td><span class="badge badge-soup">スープ</span></td><td>🥣 ポテトスープ</td><td>ボトル入り水</td><td>じゃがいも</td><td>バター</td><td data-label="効果・回復量"><strong>HP 35 回復</strong></td></tr>
+      <tr><td><span class="badge badge-soup">スープ</span></td><td>🧅 オニオンスープ</td><td>ボトル入り水</td><td>タマネギ</td><td>ハーブ</td><td data-label="効果・回復量"><strong>HP 30 回復</strong>（継続回復）</td></tr>
+      <tr><td><span class="badge badge-soup">スープ</span></td><td>🍅 トマトスープ</td><td>ボトル入り水</td><td>トマト</td><td>ハーブ</td><td data-label="効果・回復量"><strong>HP 30 回復</strong> / 体温維持</td></tr>
+      <tr><td><span class="badge badge-soup">スープ</span></td><td>🍄 マッシュルームスープ</td><td>ボトル入り水</td><td>ベルベットベル (x3)</td><td>-</td><td data-label="効果・回復量"><strong>HP 25 回復</strong></td></tr>
 
       <!-- スイーツ・バフ系 -->
-      <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>チョコレート・マッドケーキ</td><td>チョコシロップ</td><td>卵</td><td>バター</td><td><strong>HP 40 回復</strong> / 移動速度+15% (120秒) / 高金策</td></tr>
-      <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>アップルパイ</td><td>リンゴ</td><td>小麦粉</td><td>バター</td><td><strong>HP 35 回復</strong> / 移動速度+5%</td></tr>
-      <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>パンケーキ</td><td>小麦粉</td><td>卵</td><td>ミルク</td><td><strong>HP 30 回復</strong> / スタミナ上限+20</td></tr>
-      <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>ドーナツ</td><td>小麦粉</td><td>砂糖</td><td>油</td><td><strong>HP 20 回復</strong> / スタミナ+30回復</td></tr>
-      <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>フルーツポンチ</td><td>各種フルーツ (x3)</td><td>ボトル入り水</td><td>砂糖</td><td>水分補給・スタミナ全回復</td></tr>
-      <tr><td><span class="badge badge-buff">バフ</span></td><td>ホットソース</td><td>溶液 (Solution)</td><td>スパイス・ミックス</td><td>-</td><td>寒さ・凍結耐性（240秒）</td></tr>
-      <tr><td><span class="badge badge-buff">バフ</span></td><td>ソーダ</td><td>水 / 溶液</td><td>砂糖</td><td>-</td><td>移動中の命中率UP / 炎上・毒状態解除</td></tr>
+      <tr><td><span class="badge badge-buff">バフ</span></td><td>🍫 チョコ・マッドケーキ</td><td>チョコシロップ</td><td>卵</td><td>バター</td><td data-label="効果・回復量"><strong>HP 40 回復</strong> / 移動速度+15%</td></tr>
+      <tr><td><span class="badge badge-buff">バフ</span></td><td>🥧 アップルパイ</td><td>リンゴ</td><td>小麦粉</td><td>バター</td><td data-label="効果・回復量"><strong>HP 35 回復</strong> / 移動速度+5%</td></tr>
+      <tr><td><span class="badge badge-buff">バフ</span></td><td>🥞 パンケーキ</td><td>小麦粉</td><td>卵</td><td>ミルク</td><td data-label="効果・回復量"><strong>HP 30 回復</strong> / スタミナ上限+20</td></tr>
+      <tr><td><span class="badge badge-buff">バフ</span></td><td>🍩 ドーナツ</td><td>小麦粉</td><td>砂糖</td><td>油</td><td data-label="効果・回復量"><strong>HP 20 回復</strong> / スタミナ+30</td></tr>
+      <tr><td><span class="badge badge-buff">バフ</span></td><td>🍹 フルーツポンチ</td><td>各種フルーツ (x3)</td><td>ボトル入り水</td><td>砂糖</td><td data-label="効果・回復量">水分補給・スタミナ全回復</td></tr>
+      <tr><td><span class="badge badge-buff">バフ</span></td><td>🌶️ ホットソース</td><td>溶液 (Solution)</td><td>スパイス・ミックス</td><td>-</td><td data-label="効果・回復量">凍結耐性 (240秒)</td></tr>
+      <tr><td><span class="badge badge-buff">バフ</span></td><td>🥤 ソーダ</td><td>水 / 溶液</td><td>砂糖</td><td>-</td><td data-label="効果・回復量">命中率UP / 炎上・毒解除</td></tr>
 
       <!-- ポーション・薬草系 -->
-      <tr><td><span class="badge badge-heal">ポーション</span></td><td>HP回復ポーション</td><td>ロイクソップ（赤キノコ）(x3)</td><td>ハーブ / 血</td><td>-</td><td><strong>HP 100 即時回復</strong>（最高峰の薬）</td></tr>
-      <tr><td><span class="badge badge-heal">ポーション</span></td><td>ロイクソップ・ペースト</td><td>ロイクソップ (x3)</td><td>岩 (Rock)</td><td>-</td><td>敵の動きを一定時間スローにする</td></tr>
+      <tr><td><span class="badge badge-heal">ポーション</span></td><td>🧪 HP回復ポーション</td><td>ロイクソップ (x3)</td><td>ハーブ / 血</td><td>-</td><td data-label="効果・回復量"><strong>HP 100 即時回復</strong></td></tr>
+      <tr><td><span class="badge badge-heal">ポーション</span></td><td>🧪 ロイクソップ・ペースト</td><td>ロイクソップ (x3)</td><td>岩 (Rock)</td><td>-</td><td data-label="効果・回復量">敵の動きを一定時間スロー化</td></tr>
 
       <!-- 戦闘・爆弾系 -->
-      <tr><td><span class="badge badge-combat">戦闘・爆弾</span></td><td>サルファーグレネード</td><td>謎の肉</td><td>偽のサルファキャップ (キノコ)</td><td>-</td><td>敵を追尾・攻撃する特殊グレネード</td></tr>
-      <tr><td><span class="badge badge-combat">戦闘・爆弾</span></td><td>ダイナマイト</td><td>金属スクラップ</td><td>岩 / 偽のサルファキャップ / 心臓</td><td>-</td><td>広範囲爆破用ダイナマイト</td></tr>
-      <tr><td><span class="badge badge-combat">戦闘・爆弾</span></td><td>パイナップルグレネード</td><td>謎の肉 (x2)</td><td>金属スクラップ (x2)</td><td>溶液等</td><td>強力な投擲爆弾</td></tr>
+      <tr><td><span class="badge badge-combat">爆弾</span></td><td>💣 サルファーグレネード</td><td>謎の肉</td><td>偽のサルファキャップ</td><td>-</td><td data-label="効果・回復量">追尾攻撃用特殊グレネード</td></tr>
+      <tr><td><span class="badge badge-combat">爆弾</span></td><td>💣 ダイナマイト</td><td>金属スクラップ</td><td>岩 / 心臓</td><td>-</td><td data-label="効果・回復量">広範囲爆破用ダイナマイト</td></tr>
+      <tr><td><span class="badge badge-combat">爆弾</span></td><td>💣 パイナップルグレネード</td><td>謎の肉 (x2)</td><td>金属スクラップ (x2)</td><td>-</td><td data-label="効果・回復量">強力な投擲爆弾</td></tr>
 
       <!-- 中間素材・クラフト用 -->
-      <tr><td><span class="badge badge-mat">素材/増殖</span></td><td>スパイス・ミックス (x3作製)</td><td>ホットスナック（皮+スパイス）</td><td>岩 (Rock)</td><td>-</td><td>岩で砕くことでスパイスを大量増殖できる重要テクニック</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>スパイス・ミックス</td><td>塩 / 黒胡椒 (x2)</td><td>-</td><td>-</td><td>料理のベースとなる香辛料</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>パン (Bread)</td><td>小麦粉</td><td>ボトル入り水 / イースト</td><td>-</td><td>各種サンドイッチ・ピザのベース素材</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>グレービーソース</td><td>ブロス / バター</td><td>小麦粉</td><td>-</td><td>スープ・プーティン系の合成素材</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>トマトソース</td><td>トマト</td><td>ハーブ</td><td>塩</td><td>パスタ・ピザ系に使用</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>フライドポテト</td><td>じゃがいも</td><td>油</td><td>塩</td><td>そのまま食べるかプーティン素材に</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>バター</td><td>ミルク (全乳) (x2)</td><td>塩</td><td>-</td><td>お菓子・スープ・ソース系の合成素材</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>小麦粉</td><td>小麦</td><td>(粉砕機等)</td><td>-</td><td>パンやスイーツの必須ベース素材</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>チーズ</td><td>ミルク</td><td>発酵剤 (塩等)</td><td>-</td><td>ピザやバーガー、フォンデュの必須素材</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>ブロス (スープ出汁)</td><td>ボトル入り水</td><td>骨 / 肉片 / 塩 / 腎臓石</td><td>-</td><td>ラーメンやスープ、ソースのベース</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>グリーン・グローブ</td><td>カタツムリ (Snail)</td><td>岩 (Rock)</td><td>-</td><td>シュールストレミング等の素材に変化</td></tr>
+      <tr><td><span class="badge badge-mat">増殖</span></td><td>🧂 スパイス増殖 (x3)</td><td>ホットスナック</td><td>岩 (Rock)</td><td>-</td><td data-label="効果・回復量">岩で砕いてスパイス増殖</td></tr>
+      <tr><td><span class="badge badge-mat">素材</span></td><td>🧂 スパイス・ミックス</td><td>塩 / 黒胡椒 (x2)</td><td>-</td><td>-</td><td data-label="効果・回復量">調味料・料理ベース</td></tr>
+      <tr><td><span class="badge badge-mat">素材</span></td><td>🍞 パン (Bread)</td><td>小麦粉</td><td>ボトル入り水 / イースト</td><td>-</td><td data-label="効果・回復量">ベース素材</td></tr>
+      <tr><td><span class="badge badge-mat">素材</span></td><td>🥣 グレービーソース</td><td>ブロス / バター</td><td>小麦粉</td><td>-</td><td data-label="効果・回復量">合成用ソース</td></tr>
+      <tr><td><span class="badge badge-mat">素材</span></td><td>🍅 トマトソース</td><td>トマト</td><td>ハーブ</td><td>塩</td><td data-label="効果・回復量">パスタ・ピザ用</td></tr>
+      <tr><td><span class="badge badge-mat">素材</span></td><td>🍟 フライドポテト</td><td>じゃがいも</td><td>油</td><td>塩</td><td data-label="効果・回復量">プーティン素材</td></tr>
+      <tr><td><span class="badge badge-mat">素材</span></td><td>🧈 バター</td><td>ミルク (x2)</td><td>塩</td><td>-</td><td data-label="効果・回復量">合成素材</td></tr>
+      <tr><td><span class="badge badge-mat">素材</span></td><td>🌾 小麦粉</td><td>小麦</td><td>(粉砕機等)</td><td>-</td><td data-label="効果・回復量">ベース素材</td></tr>
+      <tr><td><span class="badge badge-mat">素材</span></td><td>🧀 チーズ</td><td>ミルク</td><td>発酵剤 (塩等)</td><td>-</td><td data-label="効果・回復量">ベース素材</td></tr>
+      <tr><td><span class="badge badge-mat">素材</span></td><td>🍲 ブロス (出汁)</td><td>ボトル入り水</td><td>骨 / 肉片 / 塩</td><td>-</td><td data-label="効果・回復量">スープ・ラーメン用</td></tr>
+      <tr><td><span class="badge badge-mat">素材</span></td><td>🐌 グリーン・グローブ</td><td>カタツムリ (Snail)</td><td>岩 (Rock)</td><td>-</td><td data-label="効果・回復量">シュールストレミング用</td></tr>
     </tbody>
   </table>
 
   <script>
-    function searchRecipe() {
-      const input = document.getElementById('searchInput').value.toLowerCase().trim();
+    // 検索 & チェックボックスのフィルタリング処理
+    function filterRecipes() {
+      const textInput = document.getElementById('searchInput').value.toLowerCase().trim();
+      const checkboxes = document.querySelectorAll('#materialCheckboxes input[type="checkbox"]:checked');
+      const selectedMaterials = Array.from(checkboxes).map(cb => cb.value.toLowerCase());
+      
       const rows = document.querySelectorAll('#recipeTable tbody tr');
 
       rows.forEach(row => {
-        const text = row.innerText.toLowerCase();
-        row.style.display = text.includes(input) ? '' : 'none';
+        const rowText = row.innerText.toLowerCase();
+        
+        // テキスト検索にマッチするか
+        const matchesText = textInput === '' || rowText.includes(textInput);
+        
+        // チェックされた素材が含まれているか
+        const matchesCheckboxes = selectedMaterials.length === 0 || selectedMaterials.every(mat => rowText.includes(mat));
+
+        if (matchesText && matchesCheckboxes) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
       });
+    }
+
+    // チェックボックスクリア
+    function clearCheckboxes() {
+      document.querySelectorAll('#materialCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+      filterRecipes();
+    }
+
+    // 並べ替え（ソート）機能
+    let sortDirection = false;
+    function sortTable(columnIndex, isNumeric = false) {
+      const table = document.getElementById("recipeTable");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+
+      sortDirection = !sortDirection;
+
+      rows.sort((a, b) => {
+        let cellA = a.children[columnIndex].innerText.trim();
+        let cellB = b.children[columnIndex].innerText.trim();
+
+        if (isNumeric) {
+          // HPの数値を抽出してソート
+          const numA = parseInt(cellA.match(/\d+/) || 0, 10);
+          const numB = parseInt(cellB.match(/\d+/) || 0, 10);
+          return sortDirection ? numA - numB : numB - numA;
+        } else {
+          return sortDirection ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+        }
+      });
+
+      rows.forEach(row => tbody.appendChild(row));
     }
   </script>
 
