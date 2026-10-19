@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SULFUR 料理検索システム</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 { color: #ff9800; text-align: center; }
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      box-sizing: border-box;
+      background: #1e1e1e;
+      border: 1px solid #333;
+      color: #fff;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1e1e1e;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #2c2c2c;
+    }
+    th { background-color: #2c2c2c; color: #ff9800; }
+    tr:hover { background-color: #2a2a2a; }
+  </style>
+</head>
+<body>
+
+  <h1>SULFUR 料理・レシピ検索</h1>
+  <input type="text" id="searchInput" onkeyup="searchRecipe()" placeholder="料理名や素材名を入力して検索...">
+
+  <table id="recipeTable">
+    <thead>
+      <tr>
+        <th>料理名</th>
+        <th>必要素材 1</th>
+        <th>必要素材 2</th>
+        <th>必要素材 3</th>
+        <th>効果・備考</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>ピザ</td><td>スパイシーソーセージ</td><td>チーズ</td><td>ハーブ</td><td>パン / HP100回復（6分割可能）</td></tr>
+      <tr><td>ラーメン</td><td>スパゲッティ</td><td>ブロス</td><td>卵 (オプション)</td><td>HP中回復 / 凍結耐性</td></tr>
+      <tr><td>ダブルチーズバーガー</td><td>チーズ</td><td>パン</td><td>肉</td><td>HP高回復・高効率</td></tr>
+      <tr><td>チョコレート・マッドケーキ</td><td>チョコシロップ</td><td>卵</td><td>バター</td><td>小麦粉 / 金策・常備食</td></tr>
+      <tr><td>スパイス・ミックス</td><td>塩</td><td>黒胡椒</td><td>-</td><td>他のレシピの基点・タコス量産に</td></tr>
+      <tr><td>チーズサンド</td><td>パン</td><td>チーズ</td><td>-</td><td>序盤の定番回復</td></tr>
+      <tr><td>エスカルゴ</td><td>ブロス</td><td>カタツムリ</td><td>-</td><td>高回復・高値で売れる</td></tr>
+      <tr><td>フォンデュ</td><td>チーズ</td><td>チーズ</td><td>ブロス等</td><td>HP回復・高額</td></tr>
+      <tr><td>マッシュルームスープ</td><td>ボトル入り水</td><td>ベルベットベル(x3)</td><td>-</td><td>序盤のスープ</td></tr>
+      <tr><td>プーティン</td><td>グレービー</td><td>肉</td><td>じゃがいも</td><td>金策・序盤の回復</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    function searchRecipe() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const rows = document.querySelectorAll('#recipeTable tbody tr');
+
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? '' : 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>
