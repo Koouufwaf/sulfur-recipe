@@ -105,6 +105,7 @@
       color: var(--accent-color);
       cursor: pointer;
       white-space: nowrap;
+      user-select: none;
     }
     th:hover { background-color: #3a3a3a; }
     tr:hover { background-color: #2a2a2a; }
@@ -168,8 +169,8 @@
 </head>
 <body>
 
-  <h1>SULFUR 料理・クラフト完全データベース</h1>
-  <p class="subtitle">公式・Wiki検証データ完全準拠版（逆引き・マス数・回復量）</p>
+  <h1>SULFUR 料理・クラフトデータベース</h1>
+  <p class="subtitle">公式・Wiki検証データ完全準拠版（ソート修正済み）</p>
 
   <div class="control-panel">
     <input type="text" id="searchInput" onkeyup="filterRecipes()" placeholder="🔍 料理名・素材・サイズ・効果で検索...">
@@ -212,7 +213,7 @@
       <!-- 回復系・メイン料理 -->
       <tr><td><span class="badge badge-heal">回復</span></td><td>🍔 ダブルチーズバーガー</td><td data-label="サイズ"><span class="grid-badge">2x2 (4マス)</span></td><td>チーズ (x2)</td><td>パン (x2)</td><td>各種肉 (x2)</td><td data-label="効果・回復量"><strong>200 HP (10秒)</strong> / 最強の高効率回復食</td></tr>
       <tr><td><span class="badge badge-heal">回復</span></td><td>🍕 ピザ1枚 (スライス)</td><td data-label="サイズ"><span class="grid-badge">1x1 (1マス)</span></td><td>ピザホールを6分割</td><td>-</td><td>-</td><td data-label="効果・回復量"><strong>100 HP (5秒)</strong> / 6枚合計600回復の超強力携行食</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>🍕 ピザ (ホール)</td><td data-label="サイズ"><span class="grid-badge">2x2 (4マス)</span></td><td>小麦粉 / 水</td><td>ピリ辛ソーセージ</td><td>ハーブ / チーズ</td><td data-label="効果・回復量"><strong>150 HP (10秒)</strong> / デバフ: -10%ジャンプ・移動速度[cite: 7]</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>🍕 ピザ (ホール)</td><td data-label="サイズ"><span class="grid-badge">2x2 (4マス)</span></td><td>小麦粉 / 水</td><td>ピリ辛ソーセージ</td><td>ハーブ / チーズ</td><td data-label="効果・回復量"><strong>150 HP (10秒)</strong> / デバフ: -10%ジャンプ・移動速度</td></tr>
       <tr><td><span class="badge badge-heal">回復</span></td><td>🥩 ステーキ</td><td data-label="サイズ"><span class="grid-badge">2x1 (2マス)</span></td><td>上質肉</td><td>塩</td><td>黒胡椒</td><td data-label="効果・回復量"><strong>80〜100 HP</strong> / スタミナ全回復</td></tr>
       <tr><td><span class="badge badge-heal">回復</span></td><td>🐟 シュールストレミング</td><td data-label="サイズ"><span class="grid-badge">1x2 (2マス)</span></td><td>グリーン・グローブ</td><td>生魚</td><td>-</td><td data-label="効果・回復量"><strong>80 HP</strong>（強い臭気デバフ注意）</td></tr>
       <tr><td><span class="badge badge-heal">回復</span></td><td>🍗 ナッシュビル・チキン</td><td data-label="サイズ"><span class="grid-badge">2x2 (4マス)</span></td><td>鶏もも肉 (x2)</td><td>スパイス・ミックス (x2)</td><td>-</td><td data-label="効果・回復量"><strong>75 HP</strong> / 高額売却（金策用）</td></tr>
@@ -280,4 +281,55 @@
 
         if (matchesText && matchesCheckboxes) {
           row.style.display = '';
+        } else {
+          row.style.display = 'none';
         }
+      });
+    }
+
+    // チェックボックスクリア
+    function clearCheckboxes() {
+      document.querySelectorAll('#materialCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+      filterRecipes();
+    }
+
+    // 並べ替え（ソート）機能の修正版
+    let sortDirection = {};
+    function sortTable(columnIndex, isNumeric = false, isGrid = false) {
+      const table = document.getElementById("recipeTable");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+
+      // 列ごとに昇順/降順を切り替える
+      sortDirection[columnIndex] = !sortDirection[columnIndex];
+      const asc = sortDirection[columnIndex];
+
+      rows.sort((a, b) => {
+        let cellA = a.children[columnIndex].innerText.trim();
+        let cellB = b.children[columnIndex].innerText.trim();
+
+        if (isGrid) {
+          // マス目（例: 2x2 (4マス)）の面積（カッコ内の数字など）を抽出して比較
+          const matchA = cellA.match(/\((\d+)マス\)/);
+          const matchB = cellB.match(/\((\d+)マス\)/);
+          const areaA = matchA ? parseInt(matchA[1], 10) : 1;
+          const areaB = matchB ? parseInt(matchB[1], 10) : 1;
+          return asc ? areaA - areaB : areaB - areaA;
+        } else if (isNumeric) {
+          // 効果・回復量などの数値抽出（最初の数字を取得）
+          const numA = parseInt(cellA.match(/\d+/) || 0, 10);
+          const numB = parseInt(cellB.match(/\d+/) || 0, 10);
+          return asc ? numA - numB : numB - numA;
+        } else {
+          // 文字列比較
+          return asc ? cellA.localeCompare(cellB, 'ja') : cellB.localeCompare(cellA, 'ja');
+        }
+      });
+
+      // 既存の行をクリアして並び替えた行を再追加
+      rows.forEach(row => tbody.appendChild(row));
+    }
+  </script>
+
+</body>
+</html>
