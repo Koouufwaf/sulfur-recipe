@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SULFUR 料理・レシピ全検索システム</title>
+  <title>SULFUR 料理・クラフト完全データベース</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: #121212;
       color: #e0e0e0;
-      max-width: 900px;
+      max-width: 950px;
       margin: 0 auto;
       padding: 20px;
     }
@@ -76,6 +76,7 @@
     .badge-heal { background: #2e7d32; }
     .badge-buff { background: #1565c0; }
     .badge-mat { background: #d84315; }
+    .badge-soup { background: #00838f; }
     @media (max-width: 600px) {
       th, td { padding: 8px 6px; font-size: 12px; }
     }
@@ -83,11 +84,11 @@
 </head>
 <body>
 
-  <h1>SULFUR 料理・クラフト全データベース</h1>
-  <p class="subtitle">料理名・必要素材・効果・分類からリアルタイム検索が可能です</p>
+  <h1>SULFUR 料理・クラフト完全データベース</h1>
+  <p class="subtitle">料理名、素材名、効果、分類からリアルタイムで一発検索できます</p>
 
   <div class="search-container">
-    <input type="text" id="searchInput" onkeyup="searchRecipe()" placeholder="料理名、素材（パン、チーズ等）、効果で検索...">
+    <input type="text" id="searchInput" onkeyup="searchRecipe()" placeholder="例：パン、チーズ、ピザ、回復、スープ などで検索...">
   </div>
 
   <table id="recipeTable">
@@ -102,34 +103,43 @@
       </tr>
     </thead>
     <tbody>
-      <!-- 回復系料理 -->
+      <!-- メイン・高回復料理 -->
       <tr><td><span class="badge badge-heal">回復</span></td><td>ピザ (Pizza)</td><td>スパイシーソーセージ</td><td>チーズ</td><td>ハーブ</td><td>HP大幅回復（6分割して持ち運び可能）</td></tr>
       <tr><td><span class="badge badge-heal">回復</span></td><td>チーズサンド</td><td>パン</td><td>チーズ</td><td>-</td><td>HP回復 / 序盤の定番非常食</td></tr>
       <tr><td><span class="badge badge-heal">回復</span></td><td>ダブルチーズバーガー</td><td>パン</td><td>チーズ</td><td>肉</td><td>HP高回復・高効率</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>フレンチホットドッグ</td><td>パン</td><td>肉</td><td>-</td><td>HP手軽に回復</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>ラーメン</td><td>スパゲッティ</td><td>ブロス (スープ出汁)</td><td>卵 (任意)</td><td>HP中回復 / 凍結耐性付与</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>フレンチホットドッグ</td><td>パン</td><td>肉</td><td>-</td><td>手軽に作れるHP回復食</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>ラーメン</td><td>スパゲッティ</td><td>ブロス</td><td>卵 (任意)</td><td>HP中回復 / 凍結耐性付与</td></tr>
       <tr><td><span class="badge badge-heal">回復</span></td><td>スパゲッティ・ボロネーゼ</td><td>スパゲッティ</td><td>肉</td><td>トマトソース</td><td>HP高回復</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>フォンデュ</td><td>チーズ</td><td>チーズ</td><td>ブロス</td><td>HP回復 / 高値で売却可能</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>エスカルゴ</td><td>カタツムリ</td><td>ブロス</td><td>ハーブ</td><td>HP高回復 / 金策としても優秀</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>マッシュルームスープ</td><td>ボトル入り水</td><td>ベルベットベル (x3)</td><td>-</td><td>序盤で作れる基礎回復スープ</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>オニオンスープ</td><td>ボトル入り水</td><td>タマネギ</td><td>ハーブ</td><td>HP継続回復</td></tr>
-      <tr><td><span class="badge badge-heal">回復</span></td><td>ポテトスープ</td><td>ボトル入り水</td><td>じゃがいも</td><td>バター</td><td>HP中回復</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>フォンデュ</td><td>チーズ</td><td>チーズ</td><td>ブロス</td><td>HP回復 / 高値で売却可能（金策）</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>エスカルゴ</td><td>カタツムリ</td><td>ブロス</td><td>ハーブ</td><td>HP高回復 / 高額換金アイテム</td></tr>
       <tr><td><span class="badge badge-heal">回復</span></td><td>プーティン</td><td>フライドポテト</td><td>グレービーソース</td><td>チーズ</td><td>HP高回復・高単価</td></tr>
       <tr><td><span class="badge badge-heal">回復</span></td><td>焼き魚</td><td>魚 (生)</td><td>塩</td><td>-</td><td>手軽なHP回復アイテム</td></tr>
+      <tr><td><span class="badge badge-heal">回復</span></td><td>ステーキ</td><td>肉 (上質)</td><td>塩</td><td>黒胡椒</td><td>HP特大回復 / スタミナ回復</td></tr>
 
-      <!-- スイーツ・金策・バフ -->
+      <!-- スープ類 -->
+      <tr><td><span class="badge badge-soup">スープ</span></td><td>マッシュルームスープ</td><td>ボトル入り水</td><td>ベルベットベル (x3)</td><td>-</td><td>序盤で作れる基礎回復スープ</td></tr>
+      <tr><td><span class="badge badge-soup">スープ</span></td><td>オニオンスープ</td><td>ボトル入り水</td><td>タマネギ</td><td>ハーブ</td><td>HP継続回復効果</td></tr>
+      <tr><td><span class="badge badge-soup">スープ</span></td><td>ポテトスープ</td><td>ボトル入り水</td><td>じゃがいも</td><td>バター</td><td>HP中回復</td></tr>
+      <tr><td><span class="badge badge-soup">スープ</span></td><td>トマトスープ</td><td>ボトル入り水</td><td>トマト</td><td>ハーブ</td><td>体温維持・HP回復</td></tr>
+      <tr><td><span class="badge badge-soup">スープ</span></td><td>肉のスープ (ブロス煮込み)</td><td>ボトル入り水</td><td>ブロス</td><td>肉</td><td>高い回復力のスープ</td></tr>
+
+      <!-- スイーツ・バフ系 -->
       <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>チョコレート・マッドケーキ</td><td>チョコシロップ</td><td>卵</td><td>バター</td><td>スタミナ回復・移動速度UP・高金策</td></tr>
       <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>アップルパイ</td><td>リンゴ</td><td>小麦粉</td><td>バター</td><td>HP回復 / 移動速度わずかにUP</td></tr>
       <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>パンケーキ</td><td>小麦粉</td><td>卵</td><td>ミルク</td><td>HP回復 / スタミナ上限UP</td></tr>
       <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>ドーナツ</td><td>小麦粉</td><td>砂糖</td><td>油</td><td>手軽なスタミナ回復</td></tr>
+      <tr><td><span class="badge badge-buff">バフ/スイーツ</span></td><td>フルーツポンチ</td><td>各種フルーツ (x3)</td><td>ボトル入り水</td><td>砂糖</td><td>水分補給・スタミナ回復</td></tr>
 
-      <!-- 素材・中間クラフト -->
+      <!-- 中間素材・クラフト用 -->
       <tr><td><span class="badge badge-mat">中間素材</span></td><td>スパイス・ミックス</td><td>塩</td><td>黒胡椒</td><td>-</td><td>料理クラフトの万能隠し味・タコス等に使用</td></tr>
       <tr><td><span class="badge badge-mat">中間素材</span></td><td>パン (Bread)</td><td>小麦粉</td><td>ボトル入り水</td><td>イースト</td><td>各種サンドイッチ・ピザのベース素材</td></tr>
       <tr><td><span class="badge badge-mat">中間素材</span></td><td>グレービーソース</td><td>ブロス</td><td>小麦粉</td><td>バター</td><td>スープ・プーティン系の合成素材</td></tr>
       <tr><td><span class="badge badge-mat">中間素材</span></td><td>トマトソース</td><td>トマト</td><td>ハーブ</td><td>塩</td><td>パスタ・ピザ系に使用</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>フライドポテト</td><td>じゃがいも</td><td>油</td><td>塩</td><td>そのまま食べてもよし・プーティン素材</td></tr>
-      <tr><td><span class="badge badge-mat">中間素材</span></td><td>バター</td><td>ミルク</td><td>塩</td><td>-</td><td>お菓子・スープ系の合成素材</td></tr>
+      <tr><td><span class="badge badge-mat">中間素材</span></td><td>フライドポテト</td><td>じゃがいも</td><td>油</td><td>塩</td><td>そのまま食べるかプーティン素材に</td></tr>
+      <tr><td><span class="badge badge-mat">中間素材</span></td><td>バター</td><td>ミルク</td><td>塩</td><td>-</td><td>お菓子・スープ・ソース系の合成素材</td></tr>
+      <tr><td><span class="badge badge-mat">中間素材</span></td><td>小麦粉</td><td>小麦</td><td>(粉砕機等)</td><td>-</td><td>パンやスイーツの必須ベース素材</td></tr>
+      <tr><td><span class="badge badge-mat">中間素材</span></td><td>チーズ</td><td>ミルク</td><td>発酵剤 (塩等)</td><td>-</td><td>ピザやバーガー、フォンデュの必須素材</td></tr>
+      <tr><td><span class="badge badge-mat">中間素材</span></td><td>ブロス (スープ出汁)</td><td>骨・肉片</td><td>ボトル入り水</td><td>塩</td><td>ラーメンやスープ、ソースのベース</td></tr>
     </tbody>
   </table>
 
